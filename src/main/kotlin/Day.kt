@@ -38,7 +38,7 @@ abstract class Day<ReturnType,InputType> : AoC {
     }
 }
 
-abstract class DayWithInputFile<T,U> : Day<T,U>() {
+abstract class DayWithInputFile<ReturnType,InputType> : Day<ReturnType,InputType>() {
 
     override fun getInput(): String {
         return inputFromFile(javaClass.simpleName)
