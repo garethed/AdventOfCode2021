@@ -71,7 +71,7 @@ class Day8 : DayWithInputFile<Int, List<Digits>>() {
         digitMap[digits.allPatterns.first { it.length == 5 && !digitMap.containsKey(it)}] = 2
 
         return 1000 * digitMap[digits.output[0]]!! + 100 * digitMap[digits.output[1]]!! + 10 * digitMap[digits.output[2]]!! + digitMap[digits.output[3]]!!
-        
+
     }
 
     val testInput = """be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe
