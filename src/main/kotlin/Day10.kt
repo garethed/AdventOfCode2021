@@ -64,8 +64,6 @@ class Day10 : DayWithInputFile<Long, List<String>>() {
         }
     }
 
-
-
     override fun part2Impl(input: List<String>): Long {
         val scores = input
             .map { missingChars(it) }
