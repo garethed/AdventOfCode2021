@@ -1,32 +1,34 @@
 import java.util.*
+import kotlin.collections.HashMap
 
-data class Polymer(val chain:String, val rules : Map<String,String>) {
+data class Polymer(val pairs:Map<String,Long>, val rules : Map<String,Array<String>>, val end:Char) {
 
 
     fun grow() : Polymer {
 
-        val newChain = StringBuilder()
-        var next:Char = chain[0]
+        val newPairs = HashMap<String,Long>()
 
-        for ( i in 1 until chain.length) {
-
-            val current = next
-            next = chain[i]
-            val rule = rules[current.toString() + next.toString()]
-
-            newChain.append(current)
-
-            if (rule != null) {
-                newChain.append(rule)
-            }
+        fun add(pair:String, count:Long) {
+            newPairs[pair] = newPairs.getOrDefault(pair, 0L) + count
         }
 
-        newChain.append(next)
-        return Polymer(newChain.toString(), rules)
+        pairs
+            .entries
+            .forEach {
+                val rule = rules[it.key]
+                if (rule != null) {
+                    rule.forEach { newPair -> add(newPair, it.value) }
+                }
+                else {
+                    add(it.key, it.value)
+                }
+            }
+
+        return Polymer(newPairs, rules, end)
     }
 }
 
-class Day14 : DayWithInputFile<Int, Polymer>() {
+class Day14 : DayWithInputFile<Long, Polymer>() {
 
     val testInput = """NNCB
 
@@ -49,33 +51,48 @@ CN -> C"""
 
     override fun tests() {
         test(::part1Impl, 1588, testInput)
+        test(::part2Impl, 2188189693529, testInput)
     }
 
     override fun parseInput(input: String): Polymer {
         val lines = input.lines()
+        val pairs =
+            lines[0]
+                .windowed(2)
+                .groupingBy { it }
+                .eachCount()
+                .mapValues { it.value.toLong() }
+
         val rules =
             lines
                 .drop(2)
                 .map { it.split(" -> ")}
-                .associateBy ( { it[0] }, { it[1] })
+                .associateBy ( { it[0] }, { arrayOf(it[0][0] + it[1],it[1] + it[0][1] ) })
 
-        return Polymer(lines[0], rules)
+        return Polymer(pairs, rules, lines[0].last())
     }
 
-    override fun part1Impl(input: Polymer): Int {
+    override fun part1Impl(input: Polymer): Long {
+        return calc(input, 10)
+    }
+
+    fun calc(input: Polymer, generations: Int): Long {
+
         var growing = input
-        repeat(10) { growing = growing.grow(); /*println(growing.chain)*/ println (growing.chain.groupingBy { it }.eachCount())  }
-        val counts = growing
-            .chain
-            .groupingBy { it }
-            .eachCount()
+        repeat(generations) { growing = growing.grow() }
 
-        return counts.values.maxOrNull()!! - counts.values.minOrNull()!!
+        val elements = growing
+            .pairs
+            .map { Pair(it.key[0], it.value)}
+            .plus( Pair(input.end, 1L))
+            .groupBy( {it.first }, {it.second })
+            .mapValues { it.value.sum() }
 
-
+        return elements.values.maxOrNull()!! - elements.values.minOrNull()!!
     }
 
-    override fun part2Impl(input: Polymer): Int {
-        TODO("Not yet implemented")
+    override fun part2Impl(input: Polymer): Long {
+        return calc(input, 40)
     }
 }
+
