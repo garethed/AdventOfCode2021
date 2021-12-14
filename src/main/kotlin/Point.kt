@@ -1,3 +1,5 @@
+import java.lang.Integer.parseInt
+
 data class Point(val x:Int, val y:Int) {
 
     val adjacent:Sequence<Point> get()
@@ -5,6 +7,14 @@ data class Point(val x:Int, val y:Int) {
 
     val adjacentWithDiagonals:Sequence<Point> get()
         =  adjacent.plus(sequenceOf(Point(x - 1, y - 1), Point(x + 1, y - 1), Point(x + 1, y + 1), Point(x - 1, y + 1)))
+
+
+    companion object {
+        fun fromString(string: String) : Point {
+            val parts = string.split(",").map { parseInt(it) }
+            return Point(parts[0], parts[1])
+        }
+    }
 }
 
 class Grid(val w:Int, val h:Int, val data : Array<IntArray>? = null) {
