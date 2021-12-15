@@ -18,6 +18,9 @@ data class Point(val x:Int, val y:Int) {
 }
 
 class Grid(val w:Int, val h:Int, val data : Array<IntArray>? = null) {
+
+    constructor(array: Array<IntArray>?) : this(array!![0].size, array.size, array)
+
     fun points(): Sequence<Point> {
         return sequence {
             for (y in 0 until h) {
