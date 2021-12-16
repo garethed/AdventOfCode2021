@@ -81,7 +81,7 @@ class Day15 : DayWithInputFile<Int,Array<IntArray>>() {
 
 
         return pathRisks[Point(grid.w - 1, grid.h - 1)]!!
-        
+
     }
 
     val testInput = """1163751742
