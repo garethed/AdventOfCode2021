@@ -17,6 +17,12 @@ data class Point(val x:Int, val y:Int) {
     }
 }
 
+data class Rect(val xmin:Int, val xmax:Int, val ymin:Int, val ymax:Int) {
+    fun contains(x: Int, y: Int): Boolean {
+        return x in xmin..xmax && y in ymin..ymax
+    }
+}
+
 class Grid(val w:Int, val h:Int, val data : Array<IntArray>? = null) {
 
     constructor(array: Array<IntArray>?) : this(array!![0].size, array.size, array)
