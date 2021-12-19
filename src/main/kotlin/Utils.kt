@@ -14,3 +14,7 @@ fun IntArray2D(input:String) : Array<IntArray> {
 fun CopyArray(array: Array<IntArray>): Array<IntArray> {
     return array.map { it.clone() }.toTypedArray()
 }
+
+fun splitOnBlankLines(input:String): List<String> {
+    return input.replace("\r\n", "\n").split("\n\n")
+}
