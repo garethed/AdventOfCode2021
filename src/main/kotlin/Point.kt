@@ -55,5 +55,6 @@ class Grid(val w:Int, val h:Int, val data : Array<IntArray>? = null) {
     }
 }
 
+
 data class Line(val p1:Point, val p2:Point) {
 }
