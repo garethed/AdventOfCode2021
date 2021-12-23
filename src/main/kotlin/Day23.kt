@@ -150,6 +150,7 @@ data class State(val positions: IntArray, val moveCounts:IntArray) {
 
 }
 
+
 class Day23 : Day<Int, State>() {
     override fun getInput(): String {
 /*        """#############
@@ -162,6 +163,8 @@ class Day23 : Day<Int, State>() {
 
     override fun tests() {
         test(::part1Impl, 12521, testInput)
+        test(::part2Impl, 44169, testInput)
+
     }
 
     override fun parseInput(input: String): State {
@@ -171,6 +174,8 @@ class Day23 : Day<Int, State>() {
     }
 
     override fun part1Impl(input: State): Int {
+
+        return 0
 
         var minEnergy = Int.MAX_VALUE
 
@@ -202,9 +207,46 @@ class Day23 : Day<Int, State>() {
     }
 
     override fun part2Impl(input: State): Int {
-        TODO("Not yet implemented")
-    }
+        var minEnergy = Int.MAX_VALUE
 
+      /*#B#C#B#D###      -> #B#A#A#D#
+        #D#C#B#A#           #D#C#B#A#
+        #D#B#A#C#           #D#B#A#C#
+        #A#D#C#A#        -> #B#C#D#C#
+        */
+
+        val test = intArrayOf(13,32,41,43,10,22,30,31,20,21,33,42,11,12,23,40)
+        val actual = intArrayOf(20,30,32,41,10,13,22,31,21,23,42,43,11,12,33,40)
+
+
+        val deepState = DeepState(if (input.positions.first() == 11) test else actual, IntArray(16) )
+
+        fun buildPath(state: DeepState) {
+
+            /*if (state.moveCounts.sum() % 5 == 0) {
+                println("after ${state.moveCounts.sum()} moves:")
+                state.print()
+            }*/
+
+            //state.print()
+
+            if (state.complete()) {
+                minEnergy = minOf(state.cost(), minEnergy)
+                println(minEnergy)
+            }
+            else {
+                for (nextState in state.nextStates()) {
+                    if (nextState.cost() < minEnergy) {
+                        buildPath(nextState)
+                    }
+                }
+            }
+        }
+
+        buildPath(deepState)
+
+        return minEnergy
+    }
 
     val testInput = "11,41,10,30,20,31,21,40"
 /*        """#############
